@@ -11,7 +11,34 @@
     "test:watch": "jest --watch"
   },
   "jest": {
-    "preset": "jest-expo"
+    "projects": [
+      {
+        "displayName": "services",
+        "testMatch": [
+          "<rootDir>/src/services/__tests__/**/*.test.ts"
+        ],
+        "testEnvironment": "node",
+        "transform": {
+          "\\.[jt]sx?$": "babel-jest"
+        },
+        "transformIgnorePatterns": [
+          "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|firebase|@firebase)"
+        ],
+        "moduleNameMapper": {
+          "^expo-constants$": "<rootDir>/src/__mocks__/expo-constants.ts",
+          "^expo-modules-core$": "<rootDir>/src/__mocks__/expo-modules-core.ts",
+          "^expo(.*)$": "<rootDir>/src/__mocks__/expo.ts"
+        }
+      },
+      {
+        "displayName": "app",
+        "preset": "jest-expo",
+        "testMatch": [
+          "<rootDir>/src/**/__tests__/**/*.test.{ts,tsx}",
+          "!<rootDir>/src/services/__tests__/**/*.test.ts"
+        ]
+      }
+    ]
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^7.15.9",
@@ -21,6 +48,7 @@
     "expo-background-fetch": "~14.0.9",
     "expo-battery": "~10.0.8",
     "expo-camera": "~17.0.10",
+    "expo-constants": "^55.0.9",
     "expo-location": "~19.0.8",
     "expo-notifications": "~0.32.16",
     "expo-sensors": "~15.0.8",
@@ -40,6 +68,7 @@
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^30.0.0",
     "@types/react": "~19.1.0",
+    "babel-preset-expo": "^55.0.13",
     "jest": "^30.3.0",
     "jest-expo": "^55.0.11",
     "typescript": "~5.9.2"
