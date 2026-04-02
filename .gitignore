@@ -51,3 +51,6 @@ GoogleService-Info.plist
 
 # Claude Code
 .claude/
+
+# Cursor Code
+.cursorrules
