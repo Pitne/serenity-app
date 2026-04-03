@@ -1,1 +1,10 @@
-export {};
+export { OnboardingScreen } from "./auth/OnboardingScreen";
+export { LoginScreen } from "./auth/LoginScreen";
+export { RegisterScreen } from "./auth/RegisterScreen";
+export { OTPScreen } from "./auth/OTPScreen";
+export { DashboardScreen } from "./main/DashboardScreen";
+export { MeditateScreen } from "./main/MeditateScreen";
+export { SleepScreen } from "./main/SleepScreen";
+export { JournalScreen } from "./main/JournalScreen";
+export { SettingsScreen } from "./main/SettingsScreen";
+export { NotificationScreen } from "./main/NotificationScreen";
