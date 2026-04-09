@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import type { AuthStackParamList } from "../../navigation/types";
@@ -29,7 +29,7 @@ export function LoginScreen({ navigation }: Props): React.JSX.Element {
         return;
       }
 
-      navigation.navigate("OTP", {
+      navigation.navigate("OTPLogin", {
         verificationId: result.data!,
         phoneNumber: phone,
       });
@@ -42,59 +42,61 @@ export function LoginScreen({ navigation }: Props): React.JSX.Element {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Sign In</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Text style={styles.heading}>Sign In</Text>
 
-      <View style={styles.toggle}>
-        <Pressable
-          style={[styles.toggleBtn, mode === "email" && styles.toggleActive]}
-          onPress={() => setMode("email")}
-        >
-          <Text style={mode === "email" ? styles.toggleTextActive : styles.toggleText}>
-            Email
-          </Text>
-        </Pressable>
-        <Pressable
-          style={[styles.toggleBtn, mode === "phone" && styles.toggleActive]}
-          onPress={() => setMode("phone")}
-        >
-          <Text style={mode === "phone" ? styles.toggleTextActive : styles.toggleText}>
-            Phone
-          </Text>
+        <View style={styles.toggle}>
+          <Pressable
+            style={[styles.toggleBtn, mode === "email" && styles.toggleActive]}
+            onPress={() => setMode("email")}
+          >
+            <Text style={mode === "email" ? styles.toggleTextActive : styles.toggleText}>
+              Email
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.toggleBtn, mode === "phone" && styles.toggleActive]}
+            onPress={() => setMode("phone")}
+          >
+            <Text style={mode === "phone" ? styles.toggleTextActive : styles.toggleText}>
+              Phone
+            </Text>
+          </Pressable>
+        </View>
+
+        {mode === "email" ? (
+          <>
+            <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" />
+            <TextInput style={styles.input} placeholder="Password" secureTextEntry />
+            <Pressable style={styles.button}>
+              <Text style={styles.buttonText}>Login</Text>
+            </Pressable>
+          </>
+        ) : (
+          <>
+            <TextInput
+              style={styles.input}
+              placeholder="Phone number"
+              keyboardType="phone-pad"
+              value={phone}
+              onChangeText={setPhone}
+            />
+            <Pressable
+              style={[styles.button, sending && styles.buttonDisabled]}
+              onPress={handleSendOTP}
+              disabled={sending}
+            >
+              <Text style={styles.buttonText}>{sending ? "Sending..." : "Send OTP"}</Text>
+            </Pressable>
+          </>
+        )}
+
+        <Pressable onPress={() => navigation.navigate("SignUpMethod")}>
+          <Text style={styles.link}>Don't have an account? Sign Up</Text>
         </Pressable>
       </View>
-
-      {mode === "email" ? (
-        <>
-          <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" />
-          <TextInput style={styles.input} placeholder="Password" secureTextEntry />
-          <Pressable style={styles.button}>
-            <Text style={styles.buttonText}>Login</Text>
-          </Pressable>
-        </>
-      ) : (
-        <>
-          <TextInput
-            style={styles.input}
-            placeholder="Phone number"
-            keyboardType="phone-pad"
-            value={phone}
-            onChangeText={setPhone}
-          />
-          <Pressable
-            style={[styles.button, sending && styles.buttonDisabled]}
-            onPress={handleSendOTP}
-            disabled={sending}
-          >
-            <Text style={styles.buttonText}>{sending ? "Sending..." : "Send OTP"}</Text>
-          </Pressable>
-        </>
-      )}
-
-      <Pressable onPress={() => navigation.navigate("Register")}>
-        <Text style={styles.link}>Don't have an account? Register</Text>
-      </Pressable>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

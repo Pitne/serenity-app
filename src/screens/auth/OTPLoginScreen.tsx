@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import type { AuthStackParamList } from "../../navigation/types";
 import { verifyOTP, signInWithPhone } from "../../services/authService";
 
-type Props = NativeStackScreenProps<AuthStackParamList, "OTP">;
+type Props = NativeStackScreenProps<AuthStackParamList, "OTPLogin">;
 
 const OTP_LENGTH = 6;
 const COUNTDOWN_SECONDS = 60;
 
-export function OTPScreen({ route }: Props): React.JSX.Element {
+export function OTPLoginScreen({ route }: Props): React.JSX.Element {
   const { verificationId: initialVerificationId, phoneNumber } = route.params;
 
   const [code, setCode] = useState("");
@@ -56,7 +56,7 @@ export function OTPScreen({ route }: Props): React.JSX.Element {
         Alert.alert("Error", result.error);
       }
       // On success, onAuthStateChanged in useAuth will detect the new user
-      // and RootNavigator will automatically switch to MainNavigator.
+      // and RootNavigator will automatically switch to MainNavigator (Dashboard).
     } catch (err) {
       const message = err instanceof Error ? err.message : "Verification failed.";
       Alert.alert("Error", message);
@@ -68,7 +68,6 @@ export function OTPScreen({ route }: Props): React.JSX.Element {
   const handleResend = async (): Promise<void> => {
     try {
       setResending(true);
-      // TODO: Replace with real ApplicationVerifier (expo-firebase-recaptcha)
       const mockVerifier = { verify: async () => "mock-token", type: "recaptcha" };
       const result = await signInWithPhone(phoneNumber, mockVerifier);
 
@@ -90,43 +89,45 @@ export function OTPScreen({ route }: Props): React.JSX.Element {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Enter OTP</Text>
-      <Text style={styles.subtitle}>
-        We sent a code to {phoneNumber}
-      </Text>
-
-      <TextInput
-        style={styles.otpInput}
-        value={code}
-        onChangeText={(text) => setCode(text.replace(/[^0-9]/g, "").slice(0, OTP_LENGTH))}
-        keyboardType="number-pad"
-        maxLength={OTP_LENGTH}
-        placeholder="000000"
-        textAlign="center"
-        autoFocus
-      />
-
-      <Pressable
-        style={[styles.button, verifying && styles.buttonDisabled]}
-        onPress={handleVerify}
-        disabled={verifying}
-      >
-        <Text style={styles.buttonText}>
-          {verifying ? "Verifying..." : "Confirm"}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Text style={styles.heading}>Enter OTP</Text>
+        <Text style={styles.subtitle}>
+          We sent a code to {phoneNumber}
         </Text>
-      </Pressable>
 
-      {countdown > 0 ? (
-        <Text style={styles.countdownText}>Resend in {countdown}s</Text>
-      ) : (
-        <Pressable onPress={handleResend} disabled={resending}>
-          <Text style={styles.resendText}>
-            {resending ? "Sending..." : "Resend Code"}
+        <TextInput
+          style={styles.otpInput}
+          value={code}
+          onChangeText={(text) => setCode(text.replace(/[^0-9]/g, "").slice(0, OTP_LENGTH))}
+          keyboardType="number-pad"
+          maxLength={OTP_LENGTH}
+          placeholder="000000"
+          textAlign="center"
+          autoFocus
+        />
+
+        <Pressable
+          style={[styles.button, verifying && styles.buttonDisabled]}
+          onPress={handleVerify}
+          disabled={verifying}
+        >
+          <Text style={styles.buttonText}>
+            {verifying ? "Verifying..." : "Confirm"}
           </Text>
         </Pressable>
-      )}
-    </View>
+
+        {countdown > 0 ? (
+          <Text style={styles.countdownText}>Resend in {countdown}s</Text>
+        ) : (
+          <Pressable onPress={handleResend} disabled={resending}>
+            <Text style={styles.resendText}>
+              {resending ? "Sending..." : "Resend Code"}
+            </Text>
+          </Pressable>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 

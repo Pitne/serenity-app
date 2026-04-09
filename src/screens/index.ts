@@ -1,7 +1,12 @@
 export { OnboardingScreen } from "./auth/OnboardingScreen";
 export { LoginScreen } from "./auth/LoginScreen";
 export { RegisterScreen } from "./auth/RegisterScreen";
-export { OTPScreen } from "./auth/OTPScreen";
+export { OTPLoginScreen } from "./auth/OTPLoginScreen";
+export { SignUpMethodScreen } from "./auth/SignUpMethodScreen";
+export { EmailSignUpScreen } from "./auth/EmailSignUpScreen";
+export { PhoneSignUpScreen } from "./auth/PhoneSignUpScreen";
+export { OTPSignUpScreen } from "./auth/OTPSignUpScreen";
+export { WelcomeScreen } from "./auth/WelcomeScreen";
 export { DashboardScreen } from "./main/DashboardScreen";
 export { MeditateScreen } from "./main/MeditateScreen";
 export { SleepScreen } from "./main/SleepScreen";

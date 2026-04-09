@@ -6,7 +6,17 @@ export type AuthStackParamList = {
   Onboarding: undefined;
   Login: undefined;
   Register: undefined;
-  OTP: { verificationId: string; phoneNumber: string };
+  OTPLogin: { verificationId: string; phoneNumber: string };
+  SignUpMethod: undefined;
+  EmailSignUp: undefined;
+  PhoneSignUp: undefined;
+  OTPSignUp: {
+    verificationId: string;
+    phoneNumber: string;
+    name: string;
+    dateOfBirth: string;
+  };
+  Welcome: { userName: string };
 };
 
 // ─── Main Tab ────────────────────────────────────────────────────────────────

@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import type { RootStackParamList } from "./types";
 import { useAuth } from "../hooks/useAuth";
+import { useAuthStore } from "../store/authStore";
 import { AuthNavigator } from "./AuthNavigator";
 import { MainNavigator } from "./MainNavigator";
 
@@ -11,6 +12,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function RootNavigator(): React.JSX.Element {
   const { user, loading } = useAuth();
+  const onboardingComplete = useAuthStore((s) => s.onboardingComplete);
 
   if (loading) {
     return (
@@ -22,7 +24,7 @@ export function RootNavigator(): React.JSX.Element {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {user ? (
+      {user || onboardingComplete ? (
         <Stack.Screen name="Main" component={MainNavigator} />
       ) : (
         <Stack.Screen name="Auth" component={AuthNavigator} />
